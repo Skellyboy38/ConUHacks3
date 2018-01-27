@@ -24,6 +24,7 @@
 </head>
 <body>
 <p id = "location">location</p>
+<p id = "averageRating">average rating</p>
 <video id="video" width="640" height="480" autoplay></video>
 <div id="overlay">This is HTML overlay on top of the video! </div>
 <button id="snap">Snap Photo</button>
@@ -126,11 +127,21 @@
 				"time": 1494213945
 			}
 		]
-	}
+	};
 	// Trigger photo take
 	document.getElementById("snap").addEventListener("click", function() {
-		document.getElementById("overlay").innerHTML = "Reviews:";
 		var review_list = reviews.reviews;
+
+		var averageReview = 0.0;
+		var totalSum = 0.0;
+		for(var i = 0; i < review_list.length; i++)
+		{
+		    console.log(review_list[i].rating);
+            totalSum += review_list[i].rating;
+        }
+        averageReview = totalSum/review_list.length;
+        averageRating.innerHTML = "Average rating is " + averageReview;
+		document.getElementById("overlay").innerHTML = "Average Rating is " + averageReview + "<br/> Reviews:";
 	});
 })()
 
