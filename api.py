@@ -38,7 +38,7 @@ def get_nearest_places():
 
     except Exception as e:
         print(str(e), file=sys.stderr)
-        return jsonify({'status': 'error'})
+        return jsonify({'status': 'error', 'error': str(e)}), 400
 
 
 if __name__ == "__main__":
