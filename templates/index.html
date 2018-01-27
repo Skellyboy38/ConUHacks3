@@ -6,15 +6,18 @@
     <title>Title</title>
 	 <style>
 		#overlay {
-		  position: absolute; 
-		  top: 100px; 
-		  color: #FFF; 
+		  position: absolute;
+		  top: 100px;
+		  overflow: scroll;
+		  color: #FFF;
 		  text-align: center;
 		  font-size: 20px;
 		  background-color: rgba(221, 221, 221, 0.3);
 		  width: 640px;
+		  height: 380px;
 		  padding: 10px 0;
 		  z-index: 2147483647;
+		  visibility: hidden;
 		}
 
 		#video {
@@ -129,8 +132,14 @@
 	}
 	// Trigger photo take
 	document.getElementById("snap").addEventListener("click", function() {
-		document.getElementById("overlay").innerHTML = "Reviews:";
 		var review_list = reviews.reviews;
+		var review_text = "";
+		for(var i = 0; i < review_list.length; i++)
+		{
+			review_text += (i+1) + ") " + review_list[i].text + "<br/>";
+		}
+		document.getElementById("overlay").innerHTML = "Reviews:<br/>" + review_text;
+		document.getElementById("overlay").style.visibility = "visible";
 	});
 })()
 
