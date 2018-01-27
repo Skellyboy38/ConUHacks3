@@ -5,7 +5,7 @@ import json
 import sys
 from math import sin, cos, sqrt, atan2, radians
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public', static_url_path='/public')
 
 
 @app.route("/")

@@ -24,10 +24,11 @@
 		  z-index: 1;
 		}
 	 </style>
+	 <link rel="shortcut icon"
+    href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
 <p id = "location">location</p>
-<p id = "averageRating">average rating</p>
 <video id="video" width="640" height="480" autoplay></video>
 <div id="overlay">This is HTML overlay on top of the video! </div>
 <button id="snap">Snap Photo</button>
@@ -146,8 +147,16 @@
 			review_text += (i+1) + ") " + review_list[i].text + "<br/>";
         }
         averageReview = totalSum/review_list.length;
-        averageRating.innerHTML = "Average rating is " + averageReview;
-		document.getElementById("overlay").innerHTML = "Average Rating is " + averageReview + "<br/>Reviews:<br/>" + review_text;
+		document.getElementById("overlay").innerHTML = ""
+		for(var i = 1; i < averageReview; i++)
+		{
+			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='filled_star.png') }}></img>";
+		}
+		for(i; i < 6; i++)
+		{
+			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='empty_star.png') }}></img>";
+		}
+		document.getElementById("overlay").innerHTML += "<br/>Reviews:<br/>" + review_text;
 		document.getElementById("overlay").style.visibility = "visible";
 	});
 })()
