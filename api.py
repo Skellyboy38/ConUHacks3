@@ -25,7 +25,9 @@ def get_nearest_places():
             lat_lng={'lat': lat, 'lng': lng}
         )
         places_to_ret = []
+        place_id = None
         for place in query_result.places:
+            place_id = place.place_id
             places_to_ret.append({
                 'name': str(place.name),
                 'geo_location': {
@@ -34,11 +36,18 @@ def get_nearest_places():
                 },
                 'id': str(place.place_id)
             })
-        return jsonify(places_to_ret)
+        return jsonify(_get_place_reviews(place_id, auth_key))
 
     except Exception as e:
         print(str(e), file=sys.stderr)
-        return jsonify({'status': 'error'})
+        return jsonify({'status': 'error', 'error': str(e)})
+
+
+def _get_place_reviews(place_id, key):
+    url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(place_id, key)
+    http = urllib3.PoolManager()
+    response = http.request('GET', url)
+    return json.loads(response.data.decode('utf-8'))['result']['reviews']
 
 
 if __name__ == "__main__":
