@@ -14,7 +14,7 @@ def hello():
 @app.route("/get_nearest_places", methods=['POST'])
 def get_nearest_places():
     try:
-        auth_key = request.form['key']
+        auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
         lat = request.form['latitude']
         lng = request.form['longitude']
         radius = request.form['radius']
