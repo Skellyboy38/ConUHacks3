@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from googleplaces import GooglePlaces, types, lang
 import urllib3
 import json
@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return jsonify({'status': 'success'})
+    return render_template('index.html');
 
 
 @app.route("/get_nearest_places", methods=['POST'])
@@ -25,9 +25,7 @@ def get_nearest_places():
             lat_lng={'lat': lat, 'lng': lng}
         )
         places_to_ret = []
-        place_id = None
         for place in query_result.places:
-            place_id = place.place_id
             places_to_ret.append({
                 'name': str(place.name),
                 'geo_location': {
@@ -36,7 +34,7 @@ def get_nearest_places():
                 },
                 'id': str(place.place_id)
             })
-        return jsonify(_get_place_reviews(place_id, auth_key))
+        return jsonify(places_to_ret)
 
     except Exception as e:
         print(str(e), file=sys.stderr)

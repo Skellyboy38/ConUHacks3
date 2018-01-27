@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    <title>Title</title>
+
+</head>
+<body>
+<p id = "location">location</p>
+<video id="video" width="640" height="480" autoplay></video>
+<button id="snap">Snap Photo</button>
+<canvas id="canvas" width="640" height="480"></canvas>
+<script type="text/javascript">
+(function getLocation() {
+    var location = null;
+    if(window.navigator && window.navigator.geolocation){
+        geolocation = window.navigator.geolocation;
+    }
+    if(geolocation){
+        geolocation.getCurrentPosition(function(position){
+            document.getElementById("location").innerHTML = "latitude" + position.coords.latitude + " longitude " + position.coords.longitude ;
+            console.log(position);
+        });
+        var identifier = geolocation.watchPosition(function(position){
+            document.getElementById("location").innerHTML = "latitude" + position.coords.latitude + " longitude " + position.coords.longitude ;
+            console.log(position);
+        });
+        console.log(identifier);
+    }
+    else{
+        document.getElementById("location").innerHTML = "Can't find location";
+    }
+	
+	// Grab elements, create settings, etc.
+	var video = document.getElementById('video');
+
+	// Get access to the camera!
+	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		// Not adding `{ audio: true }` since we only want video now
+		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+			video.src = window.URL.createObjectURL(stream);
+			video.play();
+		});
+	}
+	// Elements for taking the snapshot
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var video = document.getElementById('video');
+
+	// Trigger photo take
+	document.getElementById("snap").addEventListener("click", function() {
+		context.drawImage(video, 0, 0, 640, 480);
+	});
+})()
+</script>
+</body>
+
+
+</html>
