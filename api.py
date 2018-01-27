@@ -14,8 +14,7 @@ def hello():
 
 
 @app.route("/get_nearest_places", methods=['POST'])
-def get_nearest_places(lat, lng, radius):
-    auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
+def get_nearest_places(lat, lng, radius, auth_key):
     google_places = GooglePlaces(auth_key)
 
     query_result = google_places.nearby_search(
@@ -37,11 +36,12 @@ def get_nearest_places(lat, lng, radius):
 @app.route("/get_closest", methods=['POST'])
 def get_closest():
     try:
+        auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
         lat = request.form['latitude']
         lng = request.form['longitude']
         radius = request.form['radius']
         closest_distance = -1
-        result = get_nearest_places(lat, lng, radius)
+        result = get_nearest_places(lat, lng, radius, auth_key)
         for x in result:
             place_lat = x["geo_location"]["latitude"]
             place_lng = x["geo_location"]["longitude"]
@@ -62,7 +62,8 @@ def get_closest():
                 if distance < closest_distance:
                     closest_place_info = x
                     closest_distance = distance
-        return jsonify(closest_place_info)
+
+        return jsonify(_get_place_reviews(closest_place_info["id"], auth_key))
 
     except Exception as e:
         print(str(e), file=sys.stderr)
