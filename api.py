@@ -3,6 +3,8 @@ from googleplaces import GooglePlaces, types, lang
 import urllib3
 import json
 import sys
+from math import sin, cos, sqrt, atan2, radians
+
 app = Flask(__name__)
 
 
@@ -12,34 +14,59 @@ def hello():
 
 
 @app.route("/get_nearest_places", methods=['POST'])
-def get_nearest_places():
+def get_nearest_places(lat, lng, radius):
+    auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
+    google_places = GooglePlaces(auth_key)
+
+    query_result = google_places.nearby_search(
+        radius=int(radius), types=[types.TYPE_RESTAURANT],
+        lat_lng={'lat': lat, 'lng': lng}
+    )
+    places_to_ret = []
+    for place in query_result.places:
+        places_to_ret.append({
+            'name': str(place.name),
+            'geo_location': {
+                'latitude': str(place.geo_location['lat']),
+                'longitude': str(place.geo_location['lng'])
+            },
+            'id': str(place.place_id)
+        })
+    return places_to_ret
+
+@app.route("/get_closest", methods=['POST'])
+def get_closest():
     try:
-        auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
         lat = request.form['latitude']
         lng = request.form['longitude']
         radius = request.form['radius']
-        google_places = GooglePlaces(auth_key)
-
-        query_result = google_places.nearby_search(
-            radius=int(radius), types=[types.TYPE_RESTAURANT],
-            lat_lng={'lat': lat, 'lng': lng}
-        )
-        places_to_ret = []
-        for place in query_result.places:
-            places_to_ret.append({
-                'name': str(place.name),
-                'geo_location': {
-                    'latitude': str(place.geo_location['lat']),
-                    'longitude': str(place.geo_location['lng'])
-                },
-                'id': str(place.place_id)
-            })
-        return jsonify(places_to_ret)
+        closest_distance = -1
+        result = get_nearest_places(lat, lng, radius)
+        for x in result:
+            place_lat = x["geo_location"]["latitude"]
+            place_lng = x["geo_location"]["longitude"]
+            R = 6373.0
+            current_rad_lat = radians(float(lat))
+            current_rad_lng = radians(float(lng))
+            place_rad_lat = radians(float(place_lat))
+            place_rad_lng = radians(float(place_lng))
+            dlon = place_rad_lng - current_rad_lng
+            dlat = place_rad_lat - current_rad_lat
+            a = sin(dlat / 2) ** 2 + cos(current_rad_lat) * cos(current_rad_lng) * sin(dlon / 2) ** 2
+            c = 2 * atan2(sqrt(a), sqrt(1 - a))
+            distance = R * c
+            if closest_distance == -1:
+                closest_place_info = x
+                closest_distance = distance
+            else:
+                if distance < closest_distance:
+                    closest_place_info = x
+                    closest_distance = distance
+        return jsonify(closest_place_info)
 
     except Exception as e:
         print(str(e), file=sys.stderr)
         return jsonify({'status': 'error', 'error': str(e)}), 400
-
 
 if __name__ == "__main__":
     app.run(debug=True)
