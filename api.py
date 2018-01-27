@@ -62,8 +62,11 @@ def get_closest():
                 if distance < closest_distance:
                     closest_place_info = x
                     closest_distance = distance
-
-        return jsonify(_get_place_reviews(closest_place_info["id"], auth_key))
+        closest_result_info = {}
+        closest_result_info['place_info']= closest_place_info
+        closest_result_info['distance_km']= closest_distance
+        closest_result_info['reviews']= _get_place_reviews(closest_place_info["id"], auth_key)
+        return jsonify(closest_result_info)
 
     except Exception as e:
         print(str(e), file=sys.stderr)
