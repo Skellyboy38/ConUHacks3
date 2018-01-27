@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from googleplaces import GooglePlaces, types, lang
 import urllib3
 import json
@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return jsonify({'status': 'success'})
+    return render_template('index.html');
 
 
 @app.route("/get_nearest_places", methods=['POST'])

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    <title>Title</title>
+
+</head>
+<body>
+<p id = "location">location</p>
+<script type="text/javascript">
+(function getLocation() {
+    var location = null;
+    if(window.navigator && window.navigator.geolocation){
+        geolocation = window.navigator.geolocation;
+    }
+    if(geolocation){
+        geolocation.getCurrentPosition(function(position){
+            document.getElementById("location").innerHTML = "latitude" + position.coords.latitude + " longitude " + position.coords.longitude ;
+            console.log(position);
+        });
+        var identifier = geolocation.watchPosition(function(position){
+            document.getElementById("location").innerHTML = "latitude" + position.coords.latitude + " longitude " + position.coords.longitude ;
+            console.log(position);
+        });
+        console.log(identifier);
+    }
+    else{
+        document.getElementById("location").innerHTML = "Can't find location";
+    }
+})()
+</script>
+</body>
+
+
+</html>
