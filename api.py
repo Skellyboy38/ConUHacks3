@@ -66,7 +66,14 @@ def get_closest():
 
     except Exception as e:
         print(str(e), file=sys.stderr)
-        return jsonify({'status': 'error', 'error': str(e)}), 400
+        return jsonify({'status': 'error', 'error': str(e)})
+
+
+def _get_place_reviews(place_id, key):
+    url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(place_id, key)
+    http = urllib3.PoolManager()
+    response = http.request('GET', url)
+    return json.loads(response.data.decode('utf-8'))['result']['reviews']
 
 if __name__ == "__main__":
     app.run(debug=True)
