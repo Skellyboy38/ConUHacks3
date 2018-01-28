@@ -57,6 +57,40 @@ function deviceOrientation(event){
 
 }
 
+function compass(alpha, beta, gamma){
+
+	//What this does it will convert the device orientation to radians.
+	var aRads = alpha * (Math.PI / 180);
+	var bRads = beta * (Math.PI / 180);
+	var gRads = gamma * (Math.PI / 180);
+
+	var cosA = Math.cos(aRads);
+	var sinA = Math.cos(aRads);
+	var cosB = Math.cos(bRads);
+	var sinB = Math.cos(bRads);
+	var cosG = Math.cos(gRads);
+	var sinG = Math.sin(gRads);
+
+	//Calculates the rotation
+
+	var rotationA = - cosA * sinG - sinA * sinB * cosG;
+	var rotationB = - sinA * sinG + cosA * sinB * cosG;
+	var rotationC = - cosB * cosG;
+
+	var compass = Math.atan(rotationA / rotationB);
+
+	if(rotationB < 0){
+		compass += Math.PI;
+	}
+	else if (rotationA < 0){
+		compass += 2 * Math.PI;
+	}
+	compass *= 180/Math.PI;
+
+	return compass;
+
+}
+
 (function getLocation() {
     var location = null;
 
