@@ -8,6 +8,7 @@
 		#overlay {
 		  position: absolute;
 		  top: 100px;
+		  left: 50px;
 		  overflow: scroll;
 		  color: #FFF;
 		  text-align: center;
@@ -29,13 +30,19 @@
 </head>
 <body>
 <p id = "location">location</p>
+<button id="left" width="40">&lt;</button>
 <video id="video" width="640" height="480" autoplay></video>
 <div id="overlay">This is HTML overlay on top of the video! </div>
+<button id="right" width="40">&gt;</button>
+<br/>
 <button id="snap">Snap Photo</button>
-<canvas id="canvas" width="640" height="480"></canvas>
+<!--<canvas id="canvas" width="640" height="480"></canvas>-->
 <script type="text/javascript">
+var reviews = {"reviews":[]}
+var review_index = 0;
 (function getLocation() {
     var location = null;
+	
     if(window.navigator && window.navigator.geolocation){
         geolocation = window.navigator.geolocation;
     }
@@ -66,10 +73,8 @@
 		});
 	}
 	// Elements for taking the snapshot
-	var canvas = document.getElementById('canvas');
-	var context = canvas.getContext('2d');
 	var video = document.getElementById('video');
-	var reviews = {
+	reviews = {
 		"distance_km": 0.014106990608160265,
 		"place_info": {
 			"geo_location": {
@@ -134,33 +139,50 @@
 	};
 	// Trigger photo take
 	document.getElementById("snap").addEventListener("click", function() {
-		var review_list = reviews.reviews;
-		var review_text = "";
-		
-
-		var averageReview = 0.0;
-		var totalSum = 0.0;
-		for(var i = 0; i < review_list.length; i++)
+		buildOverlay();
+	});
+	document.getElementById("left").addEventListener("click", function() {
+		if(review_index > 0)
 		{
-		    console.log(review_list[i].rating);
-            totalSum += review_list[i].rating;
-			review_text += (i+1) + ") " + review_list[i].text + "<br/>";
-        }
-        averageReview = totalSum/review_list.length;
-		document.getElementById("overlay").innerHTML = ""
-		for(var i = 1; i < averageReview; i++)
-		{
-			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='filled_star.png') }}></img>";
+			review_index--;
+			buildOverlay();
 		}
-		for(i; i < 6; i++)
+	});
+	document.getElementById("right").addEventListener("click", function() {
+		if(review_index < reviews.reviews.length - 1)
 		{
-			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='empty_star.png') }}></img>";
+			review_index++;
+			buildOverlay();
 		}
-		document.getElementById("overlay").innerHTML += "<br/>Reviews:<br/>" + review_text;
-		document.getElementById("overlay").style.visibility = "visible";
 	});
 })()
 
+function buildOverlay()
+{
+	var review_list = reviews.reviews;
+	var review_text = "";
+
+	var averageReview = 0.0;
+	var totalSum = 0.0;
+	for(var i = 0; i < review_list.length; i++)
+	{
+		console.log(review_list[i].rating);
+		totalSum += review_list[i].rating;
+		//review_text += (i+1) + ") " + review_list[i].text + "<br/>";
+	}
+	averageReview = totalSum/review_list.length;
+	document.getElementById("overlay").innerHTML = reviews.place_info.name + "<br/>";
+	for(var i = 1; i < averageReview; i++)
+	{
+		document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='filled_star.png') }}></img>";
+	}
+	for(i; i < 6; i++)
+	{
+		document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='empty_star.png') }}></img>";
+	}
+	document.getElementById("overlay").innerHTML += "<br/>Reviews:<br/>" + review_list[review_index].text;
+	document.getElementById("overlay").style.visibility = "visible";
+}
 
 </script>
 </body>
