@@ -86,6 +86,7 @@ def _get_place_reviews(place_id, key):
     url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(place_id, key)
     http = urllib3.PoolManager()
     response = http.request('GET', url)
+    print(json.loads(response.data.decode('utf-8')))
     return json.loads(response.data.decode('utf-8'))['result']['reviews']
 
 if __name__ == "__main__":
