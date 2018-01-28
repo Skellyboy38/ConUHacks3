@@ -134,7 +134,91 @@ function deviceOrientation(event){
 function getInfo(){
 	reviews = {
     "distance_km": 0.014106990608160265,
-    "place_info": {
+    "opening_hours": {
+    "open_now": false, 
+    "periods": [
+      {
+        "close": {
+          "day": 0, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 0, 
+          "time": "1030"
+        }
+      }, 
+      {
+        "close": {
+          "day": 1, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 1, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 2, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 2, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 3, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 3, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 4, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 4, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 5, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 5, 
+          "time": "1030"
+        }
+      }, 
+      {
+        "close": {
+          "day": 6, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 6, 
+          "time": "1030"
+        }
+      }
+    ], 
+    "weekday_text": [
+      "Monday: 9:00 AM \u2013 9:00 PM", 
+      "Tuesday: 9:00 AM \u2013 9:00 PM", 
+      "Wednesday: 9:00 AM \u2013 9:00 PM", 
+      "Thursday: 9:00 AM \u2013 9:00 PM", 
+      "Friday: 10:30 AM \u2013 8:00 PM", 
+      "Saturday: 10:30 AM \u2013 8:00 PM", 
+      "Sunday: 10:30 AM \u2013 8:00 PM"
+    ]
+  }, 
+	"place_info": {
         "geo_location": {
             "latitude": "45.4953522",
             "longitude": "-73.57934259999999"
@@ -222,11 +306,38 @@ function buildOverlay()
 	{
 		for(var i = 0; i < review_list.length; i++)
 		{
-			console.log(review_list[i].rating);
+			//console.log(review_list[i].rating);
 			totalSum += review_list[i].rating;
 		}
 		averageReview = totalSum/review_list.length;
 		document.getElementById("overlay").innerHTML = reviews.place_info.name + "<br/>";
+		
+		//Get opening and closing hours for today so that I can tell them when it opens, if it is closed and when it closes if it's open
+		var date = new Date();
+		var day = date.getDay() - 1;
+		if(day == -1)
+			day = 6;
+		var time = date.getHours() * 100 + date.getMinutes();
+		var opening = 0;
+		var closing = 2400;
+		var dayHours = {};
+		//console.log(reviews.opening_hours.periods);
+		for(var key in reviews.opening_hours.periods)
+		{
+			dayHours = reviews.opening_hours.periods[key];
+			if(dayHours.close.day == day)
+			{
+				opening = dayHours.open.time;
+				closing = dayHours.close.time;
+			}
+		}
+		if(reviews.opening_hours.open_now)
+			document.getElementById("overlay").innerHTML += "<span style='color: green'>Open Until " + closing + "</span><br/>";
+		else if(time < parseInt(opening))
+			document.getElementById("overlay").innerHTML += "<span style='color: red'>Closed Until " + opening + "</span><br/>";
+		else
+			document.getElementById("overlay").innerHTML += "<span style='color: red'>Closed Since " + closing + "</span><br/>";
+			
 		//Display average review score
 		for(var i = 1; i < averageReview; i++)
 		{
