@@ -46,6 +46,16 @@ var data_string = "";
 var reviews = {"reviews":[]}
 var review_index = 0;
 
+value = 0;
+function deviceOrientationListener(event){
+    console.log("The alpha is " + event.alpha.geolocation);
+    console.log("The beta is " + event.beta);
+    console.log("The gamma is " + event.gamma);
+    value = event;
+    document.getElementById("phoneOrientation").innerHTML = "alpha: " + value.alpha + " beta: " + event.beta + " gamma: " + event.gamma;
+
+}
+
 (function getLocation() {
     var location = null;
 	
