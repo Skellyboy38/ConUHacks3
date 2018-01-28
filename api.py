@@ -20,7 +20,6 @@ TODO
 def hello():
     return render_template('index.html');
 
-
 @app.route("/get_nearest_places", methods=['POST'])
 def get_nearest_places(lat, lng, radius, auth_key):
     google_places = GooglePlaces(auth_key)
@@ -40,6 +39,7 @@ def get_nearest_places(lat, lng, radius, auth_key):
             'id': str(place.place_id)
         })
     return places_to_ret
+
 
 @app.route("/get_closest", methods=['POST'])
 def get_closest():
@@ -74,7 +74,9 @@ def get_closest():
         closest_result_info = {}
         closest_result_info['place_info']= closest_place_info
         closest_result_info['distance_km']= closest_distance
-        closest_result_info['reviews']= _get_place_reviews(closest_place_info["id"], auth_key)
+        reviews_json = _get_place_reviews(closest_place_info["id"], auth_key)
+        closest_result_info['reviews']= reviews_json['reviews']
+        closest_result_info['opening_hours'] = reviews_json['opening_hours']
         return jsonify(closest_result_info)
 
     except Exception as e:
@@ -86,8 +88,14 @@ def _get_place_reviews(place_id, key):
     url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(place_id, key)
     http = urllib3.PoolManager()
     response = http.request('GET', url)
-    print(json.loads(response.data.decode('utf-8')))
-    return json.loads(response.data.decode('utf-8'))['result']['reviews']
+    #print(json.loads(response.data.decode('utf-8')))
+    data = json.loads(response.data.decode('utf-8'))
+    returnJson = {}
+    returnJson['reviews'] = data['result']['reviews']
+    returnJson['opening_hours'] = data['result']['opening_hours']
+    #print(returnJson, file=sys.stderr)
+    #return json.loads(response.data.decode('utf-8'))['result']['reviews']
+    return returnJson
 
 if __name__ == "__main__":
     app.run(debug=True)
