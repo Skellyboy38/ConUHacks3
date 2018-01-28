@@ -292,6 +292,17 @@ function getInfo(){
 			buildOverlay();
 		}
 	});*/
+	
+	//To make the UI much cleaner, filter out the very long reviews and only keep ones below a certain character count
+	var filteredReviews = [];
+	for(var key in reviews.reviews)
+	{
+		if(reviews.reviews[key].text.length < 300)
+		{
+			filteredReviews.push(reviews.reviews[key]);
+		}
+	}
+	reviews.reviews = filteredReviews;
 	buildOverlay();
 }
 
@@ -349,7 +360,7 @@ function buildOverlay()
 		}
 		
 		//Display this user's review score
-		document.getElementById("overlay").innerHTML += "<br/><br/>Review (" + (review_index+1) + "/5)<br/>"
+		document.getElementById("overlay").innerHTML += "<br/><br/>Review (" + (review_index+1) + "/" + review_list.length + ")<br/>"
 		for(var i = 1; i < review_list[review_index].rating; i++)
 		{
 			document.getElementById("overlay").innerHTML += "<img width=20 height=20 src={{ url_for('static', filename='filled_star.png') }}></img>";
