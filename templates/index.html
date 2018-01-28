@@ -39,7 +39,6 @@
 <br/>
 <button id="snap">Get Info</button>
 </div>
-<p id = "phoneOrientation">phoneOrientation</p>
 <script type="text/javascript">
 var latitude = 0;
 var longitude = 0;
@@ -53,8 +52,6 @@ function deviceOrientation(event){
     console.log("The beta is " + event.beta);
     console.log("The gamma is " + event.gamma);
     value = event;
-    document.getElementById("phoneOrientation").innerHTML = "alpha: " + value.alpha + " beta: " + event.beta + " gamma: " + event.gamma;
-
 }
 
 function compass(alpha, beta, gamma){
