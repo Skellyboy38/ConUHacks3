@@ -8,15 +8,15 @@
 	 <style>
 		#overlay {
 		  position: absolute;
-		  top: 50px;
+		  top: 130px;
 		  left: 34%;
 		  overflow: scroll;
-		  color: #FFF;
+		  
 		  text-align: center;
 		  font-size: 20px;
 		  background-color: rgba(221, 221, 221, 0.4);
 		  width: 33%;
-		  height: 380px;
+		  height: 430px;
 		  padding: 10px 0;
 		  z-index: 2147483647;
 		  visibility: hidden;
@@ -31,8 +31,10 @@
     href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
+<h1 style="text-align: center">Geo AR</h1>
+<p style="text-align: center">Point your camera at a nearby restaurant and click the button to get information about it</p>
 <div style="text-align: center">
-<button id="left" width="40" height="480">&lt;</button>
+<button id="left" width="40">&lt;</button>
 <video id="video" height="480" autoplay></video>
 <div id="overlay">This is HTML overlay on top of the video! </div>
 <button id="right" width="40">&gt;</button>
@@ -142,22 +144,177 @@ function compass(alpha, beta, gamma){
 		if(review_index > 0)
 		{
 			review_index--;
-			buildOverlay();
 		}
+		else
+			review_index = reviews.reviews.length - 1;
+		if(reviews.reviews.length > 0)
+			buildOverlay();
 	});
 	document.getElementById("right").addEventListener("click", function() {
 		if(review_index < reviews.reviews.length - 1)
 		{
 			review_index++;
-			buildOverlay();
 		}
+		else
+		{
+			review_index = 0;
+		}
+		if(reviews.reviews.length > 0)
+			buildOverlay();
 	});
 })()
 
 	
 function getInfo(){
-	$.ajax({
-		url: "https://719a21bd.ngrok.io/get_closest",
+	reviews = {
+    "distance_km": 0.014106990608160265,
+    "opening_hours": {
+    "open_now": false, 
+    "periods": [
+      {
+        "close": {
+          "day": 0, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 0, 
+          "time": "1030"
+        }
+      }, 
+      {
+        "close": {
+          "day": 1, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 1, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 2, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 2, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 3, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 3, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 4, 
+          "time": "2100"
+        }, 
+        "open": {
+          "day": 4, 
+          "time": "0900"
+        }
+      }, 
+      {
+        "close": {
+          "day": 5, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 5, 
+          "time": "1030"
+        }
+      }, 
+      {
+        "close": {
+          "day": 6, 
+          "time": "2000"
+        }, 
+        "open": {
+          "day": 6, 
+          "time": "1030"
+        }
+      }
+    ], 
+    "weekday_text": [
+      "Monday: 9:00 AM \u2013 9:00 PM", 
+      "Tuesday: 9:00 AM \u2013 9:00 PM", 
+      "Wednesday: 9:00 AM \u2013 9:00 PM", 
+      "Thursday: 9:00 AM \u2013 9:00 PM", 
+      "Friday: 10:30 AM \u2013 8:00 PM", 
+      "Saturday: 10:30 AM \u2013 8:00 PM", 
+      "Sunday: 10:30 AM \u2013 8:00 PM"
+    ]
+  }, 
+	"place_info": {
+        "geo_location": {
+            "latitude": "45.4953522",
+            "longitude": "-73.57934259999999"
+        },
+        "id": "ChIJy1BiU2oayUwRNUHvbixPRwE",
+        "name": "Pizza Arménienne Arouch Maisonneuve"
+    },
+    "reviews": [
+        {
+            "author_name": "Nick Leduc",
+            "author_url": "https://www.google.com/maps/contrib/117997026853204494722/reviews",
+            "language": "en",
+            "profile_photo_url": "https://lh4.googleusercontent.com/--b-zv7HKw4Y/AAAAAAAAAAI/AAAAAAAAAC8/5ht6WUjIIn0/s128-c0x00000000-cc-rp-mo-ba3/photo.jpg",
+            "rating": 3,
+            "relative_time_description": "3 weeks ago",
+            "text": "I worked in a similar restaurant for 5 years and I know it can be annoying when customers come in at the last minute, so I try to avoid doing that. This location was supposed to close at 9pm and it was 8:30pm when I was passing by. Because it's housed within a major university and located in the downtown core I figured it'd be safe to assume that the last half hour before closing wouldn't be a pain for them, since they're probably used to getting high foot traffic. However, when I ordered my wrap, the lady working told me there'd be no veggies and asked if that would be okay. I kind of laughed and said not really and motioned to leave since it didn't really make sense to me to have a wrap without toppings for dinner when I was surrounded by other open restaurants, but she then she asked what veggies I wanted to proceed with my order. I realized that the problem was that she had already wrapped up all the veggies and put them in the fridge for the night. In the end she had to open each container and get out whatever veggies I had requested. I figured she probably hated me already for having her unwrap her veggies, but there was a snow storm outside and I wanted to eat my wrap quickly before heading out while it was still warm, so I asked her if I had time to down it quickly at a table by the door (so I wouldn't dirty anything and slow down her close). She looked at the time and told me: 5 minutes. Not wanting to feel like a pain in the ass and not wanting to have to rush, I decided to head out and take it home to eat, realizing it'd probably get cold given that I still had to walk outside in the storm, but that it was better than feeling rushed and unwelcome. I checked my watch and it was only 8:34PM. I understand that restaurant workers want to have an efficient close and leave ASAP, but if you're going to start packing things up 30 min before close I feel that's a bit too far in advance and you're better off just locking the door.\n\nI ordered the Aleppo and it was tasty, so I'd actually go again.\n\nMy experience wasn't that bad. I'm actually just giving a detailed account of how things went in case I'm just being picky over something that other people feel is kind of normal, so you can make your own judgement. I think going to a sit-down restaurant 30 minutes before closing time is kind of pushing it, but for a fast-food in a prime location I feel it should be reasonable to expect to have the basic ingredients available and have time to eat until at least 10-15 minutes before it closes",
+            "time": 1515120896
+        },
+        {
+            "author_name": "Daphnée Brazeau",
+            "author_url": "https://www.google.com/maps/contrib/111923880678789937667/reviews",
+            "language": "en",
+            "profile_photo_url": "https://lh4.googleusercontent.com/-lL2r5QCfTpA/AAAAAAAAAAI/AAAAAAAAADE/0iHrdy8x8Qk/s128-c0x00000000-cc-rp-mo/photo.jpg",
+            "rating": 4,
+            "relative_time_description": "2 months ago",
+            "text": "The food is affordable and very tasty but certain things like garlic sauce, cheese and chicken is extra which I understand. The staff is also very nice",
+            "time": 1510850523
+        },
+        {
+            "author_name": "Dimitri Yasmine",
+            "author_url": "https://www.google.com/maps/contrib/115139302416859250207/reviews",
+            "language": "en",
+            "profile_photo_url": "https://lh6.googleusercontent.com/-XAhtaSouDrM/AAAAAAAAAAI/AAAAAAAAAD8/S-iLSkNyquo/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg",
+            "rating": 5,
+            "relative_time_description": "2 months ago",
+            "text": "Best Lahmajoun in Montreal (aka lahmeh be 3ajin, a meat pizza/sandwich). Thin and crispy crust, as it should be.",
+            "time": 1511023217
+        },
+        {
+            "author_name": "Jessica Alessi",
+            "author_url": "https://www.google.com/maps/contrib/105481697301319573431/reviews",
+            "language": "en",
+            "profile_photo_url": "https://lh5.googleusercontent.com/-SfTvIGSqNHw/AAAAAAAAAAI/AAAAAAAAAAA/ACSILjWoOkDSeU0JLu7fTt6NPprjIjbQGA/s128-c0x00000000-cc-rp-mo-ba2/photo.jpg",
+            "rating": 4,
+            "relative_time_description": "3 months ago",
+            "text": "I love the food and the price. I always come here for breakfast before class. However, I work in a fast food and the first thing you are taught and are expected to do is say hi to the customer or at least half-smile then say have a nice day or enjoy your meal. However, the girl who works Friday mornings never does that. I’m the one who does it. I have to smile and say hi, she just looks at me like “what do you want”, doesn’t even say anything back, I order my food, she gives me my change, still no smile, she gives me my sandwich, I say thank you with a smile, still no reaction, then I end it with have a nice day!:).... nop nothing. Like girl I know you hate your job, so do I, but there is a minimum effort required here. You’re working in restauration/customer service. Nobody wants to see a blank face with no greetings, it isn’t fun. However apart from her, I’ve interacted with 1 other employee. A sweet lil Lebanese lady, she’s a gem. Big big smile, warm and welcoming. I’m guessing she’s the owner because she seems genuinely happy to be serving you. ily lil lady keep being u n teach the other employees ur ways",
+            "time": 1508701162
+        },
+        {
+            "author_name": "Tigran Grigoryan",
+            "author_url": "https://www.google.com/maps/contrib/111244681384712577598/reviews",
+            "language": "en",
+            "profile_photo_url": "https://lh4.googleusercontent.com/-_0lgXrS-nlk/AAAAAAAAAAI/AAAAAAAALNA/_Pkq2OGjeJY/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg",
+            "rating": 5,
+            "relative_time_description": "8 months ago",
+            "text": "Great food, great service, great quality, not expensive. The place is clean and neat.",
+            "time": 1494213945
+        }
+    ]
+}
+	/*$.ajax({
+		url: "https://0850d8a2.ngrok.io/get_closest",
 		type: "POST",
 		data: String(data_string),
 		contentType: 'application/x-www-form-urlencoded',
@@ -168,7 +325,8 @@ function getInfo(){
 			reviews = result;
 			buildOverlay();
 		}
-	});
+	});*/
+	buildOverlay();
 }
 
 function buildOverlay()
@@ -182,12 +340,39 @@ function buildOverlay()
 	{
 		for(var i = 0; i < review_list.length; i++)
 		{
-			console.log(review_list[i].rating);
+			//console.log(review_list[i].rating);
 			totalSum += review_list[i].rating;
-			//review_text += (i+1) + ") " + review_list[i].text + "<br/>";
 		}
 		averageReview = totalSum/review_list.length;
 		document.getElementById("overlay").innerHTML = reviews.place_info.name + "<br/>";
+		
+		//Get opening and closing hours for today so that I can tell them when it opens, if it is closed and when it closes if it's open
+		var date = new Date();
+		var day = date.getDay() - 1;
+		if(day == -1)
+			day = 6;
+		var time = date.getHours() * 100 + date.getMinutes();
+		var opening = 0;
+		var closing = 2400;
+		var dayHours = {};
+		//console.log(reviews.opening_hours.periods);
+		for(var key in reviews.opening_hours.periods)
+		{
+			dayHours = reviews.opening_hours.periods[key];
+			if(dayHours.close.day == day)
+			{
+				opening = dayHours.open.time;
+				closing = dayHours.close.time;
+			}
+		}
+		if(reviews.opening_hours.open_now)
+			document.getElementById("overlay").innerHTML += "<span style='color: green'>Open Until " + closing + "</span><br/>";
+		else if(time < parseInt(opening))
+			document.getElementById("overlay").innerHTML += "<span style='color: red'>Closed Until " + opening + "</span><br/>";
+		else
+			document.getElementById("overlay").innerHTML += "<span style='color: red'>Closed Since " + closing + "</span><br/>";
+			
+		//Display average review score
 		for(var i = 1; i < averageReview; i++)
 		{
 			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='filled_star.png') }}></img>";
@@ -196,7 +381,18 @@ function buildOverlay()
 		{
 			document.getElementById("overlay").innerHTML += "<img width=30 height=30 src={{ url_for('static', filename='empty_star.png') }}></img>";
 		}
-		document.getElementById("overlay").innerHTML += "<br/>Reviews:<br/>" + review_list[review_index].text;
+		
+		//Display this user's review score
+		document.getElementById("overlay").innerHTML += "<br/><br/>Review (" + (review_index+1) + "/5)<br/>"
+		for(var i = 1; i < review_list[review_index].rating; i++)
+		{
+			document.getElementById("overlay").innerHTML += "<img width=20 height=20 src={{ url_for('static', filename='filled_star.png') }}></img>";
+		}
+		for(i; i < 6; i++)
+		{
+			document.getElementById("overlay").innerHTML += "<img width=20 height=20 src={{ url_for('static', filename='empty_star.png') }}></img>";
+		}
+		document.getElementById("overlay").innerHTML += "<br/>" + review_list[review_index].text;
 		document.getElementById("overlay").style.visibility = "visible";
 	}
 }
