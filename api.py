@@ -7,6 +7,14 @@ from math import sin, cos, sqrt, atan2, radians
 
 app = Flask(__name__, static_folder='public', static_url_path='/public')
 
+'''
+TODO
+1) Issue with AJAX link
+2) use domain name
+3) UI (side buttons + main button, also it looks like crap)
+4) Dias' thing with orientation if we have time??
+'''
+
 
 @app.route("/")
 def hello():
