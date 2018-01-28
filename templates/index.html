@@ -39,6 +39,7 @@
 <br/>
 <button id="snap">Get Info</button>
 </div>
+<p id = "phoneOrientation">phoneOrientation</p>
 <script type="text/javascript">
 var latitude = 0;
 var longitude = 0;
@@ -47,7 +48,7 @@ var reviews = {"reviews":[]}
 var review_index = 0;
 
 value = 0;
-function deviceOrientationListener(event){
+function deviceOrientation(event){
     console.log("The alpha is " + event.alpha.geolocation);
     console.log("The beta is " + event.beta);
     console.log("The gamma is " + event.gamma);
@@ -58,6 +59,13 @@ function deviceOrientationListener(event){
 
 (function getLocation() {
     var location = null;
+
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", deviceOrientation);
+    }
+    else {
+       console.log("device orientation not supported");
+    }
 	
     if(window.navigator && window.navigator.geolocation){
         geolocation = window.navigator.geolocation;
