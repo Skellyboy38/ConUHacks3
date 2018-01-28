@@ -36,7 +36,9 @@ def get_nearest_places(lat, lng, radius, auth_key):
 @app.route("/get_closest", methods=['POST'])
 def get_closest():
     try:
+        global closest_place_info
         auth_key = 'AIzaSyAJPbBg8lwlXpm_3k9voCLMQqMq5RutYdc'
+        print(request.form)
         lat = request.form['latitude']
         lng = request.form['longitude']
         radius = request.form['radius']
@@ -58,10 +60,9 @@ def get_closest():
             if closest_distance == -1:
                 closest_place_info = x
                 closest_distance = distance
-            else:
-                if distance < closest_distance:
-                    closest_place_info = x
-                    closest_distance = distance
+            elif distance < closest_distance:
+                closest_place_info = x
+                closest_distance = distance
         closest_result_info = {}
         closest_result_info['place_info']= closest_place_info
         closest_result_info['distance_km']= closest_distance

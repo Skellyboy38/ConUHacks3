@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
     <title>Title</title>
@@ -33,6 +34,10 @@
 <button id="snap">Snap Photo</button>
 <canvas id="canvas" width="640" height="480"></canvas>
 <script type="text/javascript">
+var latitude = 0;
+var longitude = 0;
+var data_string = "";
+
 (function getLocation() {
     var location = null;
     if(window.navigator && window.navigator.geolocation){
@@ -41,6 +46,9 @@
     if(geolocation){
         geolocation.getCurrentPosition(function(position){
             document.getElementById("location").innerHTML = "latitude" + position.coords.latitude + " longitude " + position.coords.longitude ;
+			latitude = position.coords.latitude;
+			longitude = position.coords.longitude;
+			data_string = "latitude="+latitude+"&longitude="+longitude+"&radius=100";
             console.log(position);
         });
         var identifier = geolocation.watchPosition(function(position){
@@ -133,6 +141,7 @@
 	};
 	// Trigger photo take
 	document.getElementById("snap").addEventListener("click", function() {
+	getInfo();
 		var review_list = reviews.reviews;
 		var review_text = "";
 		
@@ -151,8 +160,21 @@
 		document.getElementById("overlay").style.visibility = "visible";
 	});
 })()
-
-
+	
+	
+function getInfo(){
+	$.ajax({
+		url: "http://localhost:5000/get_closest",
+		type: "POST",
+		data: String(data_string),
+		contentType: 'application/x-www-form-urlencoded',
+		success: function (result){
+			for(var key in result){
+				console.log(result[key]);
+			}
+		}
+	});
+}
 </script>
 </body>
 
